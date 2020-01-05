@@ -8,32 +8,8 @@ public class ProjetDevis {
         Terminal.ecrireStringln("4 : ouvrir une section existante ");
         Terminal.ecrireStringln("5 : afficher un apercu du devis ");
         Terminal.ecrireStringln("6 : quitter et editer ");
-        //Terminal.ecrireStringln("7 : quitter sans editer ");
+        Terminal.ecrireStringln("7 : quitter sans editer ");
         Terminal.ecrireString("votre choix: ");
-
-    }
-    public static String[] plus1Section(String[] tabSection){
-        String[] section = new String[tabSection.length + 1];
-        for (int i = 0; i< section.length; i++){
-            section[i] = tabSection[i];
-        }
-        tabSection = section;
-        return tabSection;
-    }
-    public static void plus1Case(int indice, String[][] intituAdd, Double[][] prixAdd){
-
-        String[][] produit = new String[indice][intituAdd.length+1];
-        Double[][] prix = new Double[indice][prixAdd.length +1];
-        //recopiage
-
-            for (int j = 0; j < intituAdd[indice].length; j++){
-                produit[indice][j] = intituAdd[indice][j];
-                prix[indice][j] = prixAdd[indice][j];
-            }
-
-
-        intituAdd = produit;
-        prixAdd = prix;
     }
     public static int afficheTabString(String[] array){
         int nbCaseOccupe =0;
@@ -49,9 +25,7 @@ public class ProjetDevis {
     public static void makeInterger(Double[][] prix, String[] tableau){
         for (int i = 0; i < tableau.length; i++){
             for (int j = 0; j < prix[i].length; j++){
-                //if (prix[i][j] == 0){
                     prix[i][j] = Double.MIN_VALUE;
-               // }
             }
         }
     }
@@ -63,7 +37,7 @@ public class ProjetDevis {
                 error = false;
                 displayMenu();
                 choice = Terminal.lireInt();
-                if (choice <= 0 || choice >6){
+                if (choice <= 0 || choice >7){
                     throw new ArrayIndexOutOfBoundsException();
                 }
 
@@ -81,7 +55,7 @@ public class ProjetDevis {
     }
     public static double getExecptionPrix(){
         boolean itIsNumber;
-        Double prix= 0.0;
+        double prix= 0.0;
         do {
             try{
                 itIsNumber = true;
@@ -117,7 +91,7 @@ public class ProjetDevis {
                 String produit = Terminal.lireString();
                 produit = controleString(produit);
                 Terminal.ecrireString("entrez le prix: ");
-                Double price = getExecptionPrix();
+                double price = getExecptionPrix();
 
                 int indice = 0;
                 //on regarde si une case est vide et ensuite on insert le domaine
@@ -159,7 +133,7 @@ public class ProjetDevis {
                 }
             }catch (ArrayIndexOutOfBoundsException e){
                 horsIndex = true;
-                Terminal.ecrireStringln("votre numero n'est pas valide");
+                Terminal.ecrireStringln("vous etes hors des bornes...");
                 Terminal.ecrireString("entrez un n° de section valide: ");
 
             }catch (TerminalException e){
@@ -190,14 +164,12 @@ public class ProjetDevis {
         Terminal.sautDeLigne();
         Terminal.ecrireString("entrez une nouvelle section: ");
         String domaine = Terminal.lireString();
-         domaine = controleString(domaine);
+        domaine = controleString(domaine);
         Terminal.ecrireString("ajouter un produit/intitulé?: ");
         String produit = Terminal.lireString();
         produit = controleString(produit);
         Terminal.ecrireString("entrez le prix: ");
-        Double price = getExecptionPrix();
-        //j'ajoute 1 a chaque tableau vu qu'uon va ajouter 1 element
-
+        double price = getExecptionPrix();
         int indice = 0;
         while( indice < tabSection.length && tabSection[indice] != null){
             indice ++;
@@ -255,7 +227,6 @@ public class ProjetDevis {
                 afficherDevis(tabSection,intituAdd,prixAdd);
             }
             else if (userChoice == 1){ // ajouter une ligne
-
                 int indice = 0;
                 Terminal.ecrireString("ajouter un produit a la section courante: ");
                 String produitAjoute = Terminal.lireString();
@@ -278,6 +249,7 @@ public class ProjetDevis {
 
             }
             else if(userChoice == 2){//retirer un produit
+
                  int taille = afficheTabString(tabSection);
 
                int indiceSection = getIndice(taille);
@@ -335,7 +307,7 @@ public class ProjetDevis {
                  String produitAjoute = Terminal.lireString();
                  produitAjoute = controleString(produitAjoute);
                  Terminal.ecrireString("entrez un prix: ");
-                 Double prixProduit = getExecptionPrix();
+                 double prixProduit = getExecptionPrix();
                     while( indice < tabSection.length && ! tabSection[indice].equals(tabSection[indSection])){
                         indice ++;
                     }
@@ -352,7 +324,7 @@ public class ProjetDevis {
             }
             userChoice = catchUserChoice();
 
-        }while(userChoice != 6 );
+        }while(userChoice != 6 && userChoice != 7);
 
         return userChoice;
     }
@@ -364,11 +336,11 @@ public class ProjetDevis {
         makeInterger(prixAdd,tabSections);
         int choixFinal =0;
         int user = entrerSectionPremiere(tabSections, intituleAdd, prixAdd);
-        if(user != 6){
+        if(user < 6){
             choixFinal = traitement(user,tabSections,intituleAdd,prixAdd);
         }
         if(user == 7 || choixFinal == 7){
-            Terminal.ecrireStringln("le choix final est "+choixFinal+" et user = "+user);
+            Terminal.ecrireStringln("rien a faire. aurevoir...");
         }
         if(user == 6 || choixFinal == 6){
             afficherDevis(tabSections,intituleAdd,prixAdd);
