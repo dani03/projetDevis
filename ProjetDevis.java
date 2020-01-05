@@ -12,6 +12,29 @@ public class ProjetDevis {
         Terminal.ecrireString("votre choix: ");
 
     }
+    public static String[] plus1Section(String[] tabSection){
+        String[] section = new String[tabSection.length + 1];
+        for (int i = 0; i< section.length; i++){
+            section[i] = tabSection[i];
+        }
+        tabSection = section;
+        return tabSection;
+    }
+    public static void plus1Case(int indice, String[][] intituAdd, Double[][] prixAdd){
+
+        String[][] produit = new String[indice][intituAdd.length+1];
+        Double[][] prix = new Double[indice][prixAdd.length +1];
+        //recopiage
+
+            for (int j = 0; j < intituAdd[indice].length; j++){
+                produit[indice][j] = intituAdd[indice][j];
+                prix[indice][j] = prixAdd[indice][j];
+            }
+
+
+        intituAdd = produit;
+        prixAdd = prix;
+    }
     public static int afficheTabString(String[] array){
         int nbCaseOccupe =0;
         for (int i = 0; i < array.length; i++){
@@ -53,7 +76,7 @@ public class ProjetDevis {
                 Terminal.ecrireStringln("vous etes hors des bornes!");
             }
         }while(error);
-        Terminal.ecrireStringln("choice vaut "+choice);
+
         return choice;
     }
     public static double getExecptionPrix(){
@@ -163,6 +186,7 @@ public class ProjetDevis {
         return mot;
     }
     public static void entrerSectionContinue( String[] tabSection,String[][] intituAdd, Double[][] prixAdd){
+
         Terminal.sautDeLigne();
         Terminal.ecrireString("entrez une nouvelle section: ");
         String domaine = Terminal.lireString();
@@ -172,6 +196,7 @@ public class ProjetDevis {
         produit = controleString(produit);
         Terminal.ecrireString("entrez le prix: ");
         Double price = getExecptionPrix();
+        //j'ajoute 1 a chaque tableau vu qu'uon va ajouter 1 element
 
         int indice = 0;
         while( indice < tabSection.length && tabSection[indice] != null){
@@ -189,6 +214,7 @@ public class ProjetDevis {
         Terminal.sautDeLigne();
     }
     public static void afficherDevis(String[] section, String[][] produit, Double[][] prixProduit){
+
         Double prixNet = 0.0;
         Double total = 0.0;
         int i;
@@ -229,6 +255,7 @@ public class ProjetDevis {
                 afficherDevis(tabSection,intituAdd,prixAdd);
             }
             else if (userChoice == 1){ // ajouter une ligne
+
                 int indice = 0;
                 Terminal.ecrireString("ajouter un produit a la section courante: ");
                 String produitAjoute = Terminal.lireString();
@@ -238,6 +265,7 @@ public class ProjetDevis {
                 while( indice < tabSection.length && tabSection[indice] != null){
                     indice ++;
                 }
+
                 //on va chercher a regarder la premiere case vide pour inserer les produit du domaine
                 int sousIndice = 0;
                 while (sousIndice < intituAdd[indice].length && intituAdd[indice -1][sousIndice] != null ){
@@ -262,17 +290,19 @@ public class ProjetDevis {
                  int caseOccupe = 0;
                  boolean horsIndex;
                  do {
-                         Terminal.ecrireString("quel produit voulez vous retirez: ");
-                         int indiceTab2 = Terminal.lireInt();
-                         indiceTab2 -= 1;
-                         while(indiceTab2 > 0 && intituAdd[indiceSection][indiceTab2] == null){
-
-                             Terminal.ecrireStringln("nombre invalide reessayer...");
+                     try {
                              Terminal.ecrireString("quel produit voulez vous retirez: ");
-                             indiceTab2 = Terminal.lireInt();
+                             int indiceTab2 = Terminal.lireInt();
                              indiceTab2 -= 1;
-                         }
-                         try {
+
+                             while(indiceTab2 > 0 && intituAdd[indiceSection][indiceTab2] == null){
+
+                                 Terminal.ecrireStringln("nombre invalide reessayer...");
+                                 Terminal.ecrireString("quel produit voulez vous retirez: ");
+                                 indiceTab2 = Terminal.lireInt();
+                                 indiceTab2 -= 1;
+                             }
+
                              while(caseOccupe < intituAdd[indiceSection].length && ! intituAdd[indiceSection][caseOccupe].equals(intituAdd[indiceSection][indiceTab2])){
                                  caseOccupe += 1;
                              }
@@ -283,7 +313,7 @@ public class ProjetDevis {
 
                          }catch (TerminalException ex){
                              horsIndex = true;
-                             Terminal.ecrireString(" les lettres ne sont pas valide ");
+                             Terminal.ecrireStringln(" les lettres ne sont pas valide reessayez ");
                          }
                  }while(horsIndex);
 
@@ -328,9 +358,9 @@ public class ProjetDevis {
     }
 
     public static void main(String[] args){
-        String[] tabSections = new String[30];
-        String[][] intituleAdd = new String[30][20];
-        Double[][] prixAdd = new Double[30][20];
+        String[] tabSections = new String[100];
+        String[][] intituleAdd = new String[tabSections.length][20];
+        Double[][] prixAdd = new Double[tabSections.length][intituleAdd.length];
         makeInterger(prixAdd,tabSections);
         int choixFinal =0;
         int user = entrerSectionPremiere(tabSections, intituleAdd, prixAdd);
