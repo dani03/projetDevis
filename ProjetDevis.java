@@ -22,6 +22,26 @@ public class ProjetDevis {
         }
         return nbCaseOccupe;
     }
+    public static String affichageTitre(String prod ){
+        String price = prod+"";
+        int tailleMax = 20;
+        int tailleProd = price.length();
+        String espace =" ";
+        for (int i = 1; i <= tailleMax - tailleProd; i++){
+            espace = espace + " ";
+        }
+        return price+espace;
+    }
+    public static String affichageTitre(double prod ){
+        String price = prod+"";
+        int tailleMax = 11;
+        int tailleProd = price.length();
+        String espace = " ";
+        for (int i = 1; i <= tailleMax - tailleProd; i++){
+            espace += " ";
+        }
+        return espace+price;
+    }
     public static void makeInterger(Double[][] prix, String[] tableau){
         for (int i = 0; i < tableau.length; i++){
             for (int j = 0; j < prix[i].length; j++){
@@ -29,6 +49,7 @@ public class ProjetDevis {
             }
         }
     }
+
     public static int catchUserChoice(){
         boolean error;
         int choice = Integer.MIN_VALUE;
@@ -143,7 +164,7 @@ public class ProjetDevis {
 
             }catch (NullPointerException e) { //marche pas a voir avec le prof
                 horsIndex = true;
-                Terminal.ecrireStringln("ce nombre est invalide ekie");
+                Terminal.ecrireStringln("ce nombre est invalide........NulPointeur");
                 Terminal.ecrireStringln("entrez le n° de section modifié: ");
             }
         }while(horsIndex);
@@ -152,6 +173,7 @@ public class ProjetDevis {
     }
     public static String controleString(String mot){
         mot = mot.trim();
+
         while (mot.isEmpty()){
             Terminal.ecrireString("le nom ne peut etre vide entre: ");
             mot = Terminal.lireString();
@@ -198,17 +220,18 @@ public class ProjetDevis {
             }
             for(ptCase = 0; ptCase < produit[i].length; ptCase++){
                 if (section[i] != null && produit[i][ptCase] != null && (prixProduit[i][ptCase] != Double.MIN_VALUE)){
-                    Terminal.ecrireStringln("       "+produit[i][ptCase].toUpperCase()+"       "+prixProduit[i][ptCase]+" €");
+                    Terminal.ecrireStringln("       "+affichageTitre(produit[i][ptCase].toUpperCase())+prixProduit[i][ptCase]+" €");
                     prixNet = calculPrixNet(prixProduit, i);
                 }
             }
             if (section[i] != null || prixProduit[i][ptCase -1] != Double.MIN_VALUE ){
                 Terminal.sautDeLigne();
-                Terminal.ecrireStringln("       prix net: ".toUpperCase()+prixNet+" €");
+                Terminal.ecrireStringln(affichageTitre("       prix net:".toUpperCase())+affichageTitre(prixNet)+" €");
                 total += prixNet;
             }
         }
-        Terminal.ecrireStringln("       total: ".toUpperCase()+total+" €");
+        Terminal.ecrireStringln("----------------------------------------------");
+        Terminal.ecrireStringln(affichageTitre("       total:".toUpperCase())+affichageTitre(total)+" €");
         Terminal.sautDeLigne();
     }
     public static void suppression(int casePrise,int indice, String[][] sousTab, Double[][] tabPrix){
@@ -236,8 +259,7 @@ public class ProjetDevis {
                 while( indice < tabSection.length && tabSection[indice] != null){
                     indice ++;
                 }
-
-                //on va chercher a regarder la premiere case vide pour inserer les produit du domaine
+                //on va chercher a regarder la premiere case vide pour inserer les produits du domaine
                 int sousIndice = 0;
                 while (sousIndice < intituAdd[indice].length && intituAdd[indice -1][sousIndice] != null ){
                     sousIndice++;
@@ -252,9 +274,9 @@ public class ProjetDevis {
 
                  int taille = afficheTabString(tabSection);
 
-               int indiceSection = getIndice(taille);
-                int i;
-                    for (i = 0; i < intituAdd[i].length; i++){
+                 int indiceSection = getIndice(taille);
+
+                    for (int i = 0; i < intituAdd[i].length; i++){
                         if(intituAdd[indiceSection][i] != null){
                             Terminal.ecrireStringln((i+1)+": "+intituAdd[indiceSection][i]);
                         }
@@ -331,7 +353,7 @@ public class ProjetDevis {
 
     public static void main(String[] args){
         String[] tabSections = new String[100];
-        String[][] intituleAdd = new String[tabSections.length][20];
+        String[][] intituleAdd = new String[tabSections.length][50];
         Double[][] prixAdd = new Double[tabSections.length][intituleAdd.length];
         makeInterger(prixAdd,tabSections);
         int choixFinal =0;
@@ -340,7 +362,7 @@ public class ProjetDevis {
             choixFinal = traitement(user,tabSections,intituleAdd,prixAdd);
         }
         if(user == 7 || choixFinal == 7){
-            Terminal.ecrireStringln("rien a faire. aurevoir...");
+            Terminal.ecrireStringln("rien à faire. aurevoir...");
         }
         if(user == 6 || choixFinal == 6){
             afficherDevis(tabSections,intituleAdd,prixAdd);
