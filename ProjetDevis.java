@@ -173,9 +173,20 @@ public class ProjetDevis {
     }
     public static String controleString(String mot){
         mot = mot.trim();
+        boolean errorNumber;
+        do {
+            try {
+                errorNumber = true;
+                Integer.parseInt(mot);
+                Terminal.ecrireString("vous ne pouvez pas entrez des nombres comme nom reessayez: ");
+                mot = Terminal.lireString();
+            }catch(NumberFormatException e){
+                errorNumber = false;
+            }
+        }while(errorNumber);
 
         while (mot.isEmpty()){
-            Terminal.ecrireString("le nom ne peut etre vide entre: ");
+            Terminal.ecrireString("le nom ne peut etre vide entre un nom: ");
             mot = Terminal.lireString();
         }
 
@@ -210,7 +221,7 @@ public class ProjetDevis {
     public static void afficherDevis(String[] section, String[][] produit, Double[][] prixProduit){
 
         Double prixNet = 0.0;
-        Double total = 0.0;
+        double total = 0.0;
         int i;
         int ptCase;
         for ( i = 0; i < section.length; i++){
@@ -230,7 +241,7 @@ public class ProjetDevis {
                 total += prixNet;
             }
         }
-        Terminal.ecrireStringln("----------------------------------------------");
+        Terminal.ecrireStringln("________________          _____________");
         Terminal.ecrireStringln(affichageTitre("       total:".toUpperCase())+affichageTitre(total)+" €");
         Terminal.sautDeLigne();
     }
@@ -255,7 +266,7 @@ public class ProjetDevis {
                 String produitAjoute = Terminal.lireString();
                 produitAjoute = controleString(produitAjoute);
                 Terminal.ecrireString("entrez un prix: ");
-                Double prixProduit = getExecptionPrix();
+                double prixProduit = getExecptionPrix();
                 while( indice < tabSection.length && tabSection[indice] != null){
                     indice ++;
                 }
@@ -358,14 +369,11 @@ public class ProjetDevis {
         makeInterger(prixAdd,tabSections);
         int choixFinal =0;
         int user = entrerSectionPremiere(tabSections, intituleAdd, prixAdd);
-        if(user < 6){
-            choixFinal = traitement(user,tabSections,intituleAdd,prixAdd);
-        }
-        if(user == 7 || choixFinal == 7){
-            Terminal.ecrireStringln("rien à faire. aurevoir...");
-        }
-        if(user == 6 || choixFinal == 6){
-            afficherDevis(tabSections,intituleAdd,prixAdd);
-        }
+        if(user < 6) choixFinal = traitement(user,tabSections,intituleAdd,prixAdd);
+
+        if(user == 7 || choixFinal == 7) Terminal.ecrireStringln("rien à faire. aurevoir...");
+
+        if(user == 6 || choixFinal == 6) afficherDevis(tabSections,intituleAdd,prixAdd);
+
     }
 }
