@@ -144,7 +144,7 @@ public class ProjetDevis {
                 horsIndex = false;
                  indSection = Terminal.lireInt();
                  indSection -= 1;
-                if( indSection > taille || indSection <=-1){
+                if( indSection >= taille || indSection <=-1){
                     throw new ArrayIndexOutOfBoundsException();
                 }
             }catch (ArrayIndexOutOfBoundsException e){
@@ -182,24 +182,30 @@ public class ProjetDevis {
         return mot;
     }
     public static void ajoutElement(String[] TableauSection,String[][] TabProduit, Double[][] TabPrix){
-        int indice = 0;
-        Terminal.ecrireString("ajouter un produit a la section courante: ");
-        String produitAjoute = Terminal.lireString();
-        produitAjoute = controleString(produitAjoute);
-        Terminal.ecrireString("entrez un prix: ");
-        double prixProduit = getExecptionPrix();
-        while( indice < TableauSection.length && TableauSection[indice] != null){
-            indice ++;
+        try {
+            int indice = 0;
+            Terminal.ecrireString("ajouter un produit a la section courante: ");
+            String produitAjoute = Terminal.lireString();
+            produitAjoute = controleString(produitAjoute);
+            Terminal.ecrireString("entrez un prix: ");
+            double prixProduit = getExecptionPrix();
+            while( indice < TableauSection.length && TableauSection[indice] != null){
+                indice ++;
+            }
+            //on va chercher a regarder la premiere case vide pour inserer les produits du domaine
+            int sousIndice = 0;
+            while (sousIndice < TabProduit[indice].length && TabProduit[indice -1][sousIndice] != null ){
+                sousIndice++;
+            }
+            TabProduit[indice -1][sousIndice] = produitAjoute;
+            TabPrix[indice -1][sousIndice] = prixProduit;
+            Terminal.ecrireStringln("produit ajouté avec success!!");
+            Terminal.sautDeLigne();
+        }catch (ArrayIndexOutOfBoundsException e){
+            Terminal.ecrireStringln("vous devez au moins rentrez une section ..");
+            entrerSectionPremiere(TableauSection,TabProduit, TabPrix);
         }
-        //on va chercher a regarder la premiere case vide pour inserer les produits du domaine
-        int sousIndice = 0;
-        while (sousIndice < TabProduit[indice].length && TabProduit[indice -1][sousIndice] != null ){
-            sousIndice++;
-        }
-        TabProduit[indice -1][sousIndice] = produitAjoute;
-        TabPrix[indice -1][sousIndice] = prixProduit;
-        Terminal.ecrireStringln("produit ajouté avec success!!");
-        Terminal.sautDeLigne();
+
     }
     public static void entrerSectionContinue( String[] tabSection,String[][] intituAdd, Double[][] prixAdd){
 
@@ -292,11 +298,13 @@ public class ProjetDevis {
             Terminal.ecrireStringln("la case n'a pas ete trouvé");
         }else{
             //ici on appelle la fonction suppression afin d'eviter les trous et supprimer la valeur
-            suppression(caseOccupe,indiceSection, tableauIntitule, prixAdd);
+            suppression(caseOccupe,indiceSection, tableauIntitule, prixAdd, tableauSection);
+            //ici on va verifier si toute les cases sont vide si oui on supprime aussi la section
             Terminal.ecrireStringln(" l'element a bien été supprimé!!");
         }
     }
     public static void afficherDevis(String[] section, String[][] produit, Double[][] prixProduit){
+
         Double sousTotal = 0.0;
         double total = 0.0;
 
@@ -322,12 +330,26 @@ public class ProjetDevis {
         Terminal.ecrireStringln(affichageTitre("       net a payer:".toUpperCase())+affichageTitre(total)+" €");
         Terminal.sautDeLigne();
     }
-    public static void suppression(int casePrise,int indice, String[][] sousTab, Double[][] tabPrix){
+    public static void suppression(int casePrise,int indice, String[][] sousTab, Double[][] tabPrix, String[] section){
         for (int i = casePrise; i < sousTab[indice].length - 1; i++){
             sousTab[indice][i] = sousTab[indice][i + 1];
             sousTab[indice][i + 1] = null;
             tabPrix[indice][i] = tabPrix[indice][i + 1];
             tabPrix[indice][i + 1] = Double.MIN_VALUE;
+        }
+        boolean vide = false;
+        int i;
+        for ( i = 0; i < sousTab[indice].length -1; i++){
+            if(sousTab[indice][i] != null){
+                vide = false;
+                break;
+            }else if(sousTab[indice][i] == null){
+                vide= true;
+            }
+        }
+        if(vide){
+            section[indice] = null;
+            Terminal.ecrireStringln(" plus aucun produit section supprimé");
         }
     }
     public static int traitement(int userChoice, String[] tabSection,String[][] intituAdd, Double[][] prixAdd){
