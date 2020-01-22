@@ -139,6 +139,7 @@ public class ProjetDevis {
         boolean horsIndex;
         Terminal.ecrireString("entrez le numero de section: ");
         int indSection = Integer.MIN_VALUE;
+        int nbErreur =0;
         do {
             try{
                 horsIndex = false;
@@ -147,17 +148,25 @@ public class ProjetDevis {
                 if( indSection >= taille || indSection <=-1){
                     throw new ArrayIndexOutOfBoundsException();
                 }
+
             }catch (ArrayIndexOutOfBoundsException e){
+                nbErreur += 1;
                 horsIndex = true;
                 Terminal.ecrireStringln("numero de section invalide...");
+                if (nbErreur >= 5){
+                    Terminal.ecrireStringln("vous n'arrivez pas trouver un indice le programme va etre arreter");
+                    indSection = 404;
+                    return indSection;
+                }
                 Terminal.ecrireString("entrez un n° de section valide: ");
 
             }catch (TerminalException e){
+                nbErreur += 1;
                 horsIndex = true;
                 Terminal.ecrireStringln("vous devez entrez un nombre");
                 Terminal.ecrireString("entrez le n° de section modifié: ");
             }
-        }while(horsIndex);
+        }while(horsIndex && nbErreur <= 5);
 
        return indSection;
     }
@@ -260,6 +269,8 @@ public class ProjetDevis {
     public static void procedeSuppression(String[] tableauSection,String[][] tableauIntitule, Double[][] prixAdd){
         int taille = afficheTabString(tableauSection);
         int indiceSection = getIndice(taille);
+        if (indiceSection == 404) return;
+
         for (int i = 0; i < tableauIntitule[i].length; i++){
             if(tableauIntitule[indiceSection][i] != null){
                 Terminal.ecrireStringln((i+1)+": "+tableauIntitule[indiceSection][i]);
@@ -349,7 +360,7 @@ public class ProjetDevis {
         }
         if(vide){
             section[indice] = null;
-            Terminal.ecrireStringln(" plus aucun produit section supprimé");
+            Terminal.ecrireString(" plus aucun produit SECTION SUPPRIMÉ...");
         }
     }
     public static int traitement(int userChoice, String[] tabSection,String[][] intituAdd, Double[][] prixAdd){
