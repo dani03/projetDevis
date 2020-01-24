@@ -81,10 +81,15 @@ public class ProjetDevis {
             try{
                 itIsNumber = true;
                  prix = Terminal.lireDouble();
+                 if (prix <= 0) throw new NumberFormatException();
 
             }catch (TerminalException e){
                 itIsNumber = false;
                 Terminal.ecrireStringln("vous devez entrer un nombre");
+                Terminal.ecrireString("entrez un prix: ");
+            }catch (NumberFormatException e){
+                itIsNumber = false;
+                Terminal.ecrireStringln("vous devez entrer nombre positif non nul");
                 Terminal.ecrireString("entrez un prix: ");
             }
         }while(!itIsNumber);
@@ -379,6 +384,7 @@ public class ProjetDevis {
             else if(userChoice == 4){ //ouvrir une secton exsistante
                 openSectionExist(tabSection,intituAdd,prixAdd);
             }
+
             userChoice = catchUserChoice();
 
         }while(userChoice != 6 && userChoice != 7);
@@ -387,8 +393,8 @@ public class ProjetDevis {
     }
 
     public static void main(String[] args){
-        String[] tabSections = new String[100];
-        String[][] intituleAdd = new String[tabSections.length][50];
+        String[] tabSections = new String[50];
+        String[][] intituleAdd = new String[tabSections.length][20];
         Double[][] prixAdd = new Double[tabSections.length][intituleAdd.length];
         makeDouble(prixAdd,tabSections);
         int choixFinal =0;
